@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 
-import * as fs from 'fs/promises';
+const opts = {};
 
-try {
-  const content = 'Some content!';
-  await fs.writeFile('index.html', "Hello World!");
-} catch (err) {
-  console.log(err);
-}
+process.argv.slice(2).forEach((arg, index) => {
+  if (/^--.+=/.test(arg)) {
+    let m = arg.match(/^--([^=]+)=([\s\S]*)$/);
+    opts[m[1]] = m[2] || true;
+  }
 
-/* try {
-  await fs.unlink('/tmp/hello');
-  console.log('successfully deleted /tmp/hello');
-} catch (error) {
-  console.error('there was an error:', error.message);
-} */
+  else if (/^-[^-]+/.test(arg)) {
+    arg.slice(1).split('').forEach((letter, index) => {
+      opts[letter] = true;
+    })
+  }
+});
+console.log(opts)
